@@ -21,7 +21,7 @@
 
 // figure out how to read files
 // distance and possibly direction will be affected?
-module design1(
+module sequential(
     input logic clk,
     input logic rst_n,
     input logic valid,
