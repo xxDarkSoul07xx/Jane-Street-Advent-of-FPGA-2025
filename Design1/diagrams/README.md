@@ -1,1 +1,1 @@
-
+These are my drawings from planning how to design this. They aren't 100% complete/correct, but I think that they show what my initial thoughts were to solve this problem and at the point where I can use them to guide me in my code.
