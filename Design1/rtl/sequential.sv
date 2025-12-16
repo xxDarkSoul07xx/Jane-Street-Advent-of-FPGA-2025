@@ -19,97 +19,72 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-// figure out how to read files
-// distance and possibly direction will be affected?
 module sequential(
     input logic clk,
     input logic rst_n,
-    input logic valid,
+    input logic valid, // a signal to let us know that a new movement request is ready
     input logic direction, // 1 is right, 0 is left
     input logic [15:0] distance, // 16 bits should be enough for how far left or right to move
-    output logic ready,
-    output logic [15:0] zero_count // same here 16 bits should be enough
+    output logic ready, // lets us know that we can accept a new move
+    output logic [15:0] zero_count, // same here 16 bits should be enough
+    output logic [6:0] position // for where the dial is currently at
     );
     
     logic [6:0] position; // 0-99 so we need 7 bits to represent them
-    logic signed [17:0] temp_pos; // temp holder for the position (to help deal with if our position after moving the distance is >= 100 or < 0)
-    logic direction_reg; // copy over the direction and distance from inputs for internal use in case original inputs change
-    logic [15:0] distance_reg;
+    logic [6:0] new_pos;  // the possible next position
+    logic [6:0] distance_mod; // distance % 100 to make it 0-99
+    logic busy; // 1 is that a move is processing, 0 is we are idle
     
-    typedef enum logic [2:0] {idle, extract, calculate, edit, check} statetype; // states for the fsm
-    statetype state, nextstate;
-
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin // reset: state is idle, initial position on dial is 50, set zero_count to 0, and ready to 0
-            state <= idle;
-            position <= 7'd50;
-            zero_count <= 16'd0;
-            ready <= 1'b0;
-        end else begin
-            state <= nextstate; // if not reset, go to the next state
-        end
-    end
-    
+    // do distance mod 100
+    // do a mod 100 manually; formula we are gonna use here: distance % 100 = distance - 100*(distance/100)
     always_comb begin
-        nextstate = state; // by default, stay in the current state
-        case (state)
-            idle: begin
-                if (valid) nextstate = extract;
-            end
-            extract: begin
-                nextstate = calculate;
-            end
-            calculate: begin
-                nextstate = edit;
-            end
-            edit: begin
-                if (temp_pos >= 100 || temp_pos < 0)
-                    nextstate = edit; // keep looping until temp_pos is between 0-99 inclusive
-                else
-                    nextstate = check;
-            end
-            check: begin
-                nextstate = idle; // when done, go back to idle
-            end
-            default: nextstate = idle; // by default, go back to idle
-        endcase
+        logic [15:0] temp = distance; // copy the distance input in case something changes and also so we can do stuff with it
+        if (temp >= 16'd6400) temp = temp - 16'd6400;  // 64*100 ; binary decomposition
+        if (temp >= 16'd3200) temp = temp - 16'd3200;  // 32*100  
+        if (temp >= 16'd1600) temp = temp - 16'd1600;  // 16*100
+        if (temp >= 16'd800)  temp = temp - 16'd800;   // 8*100
+        if (temp >= 16'd400)  temp = temp - 16'd400;   // 4*100
+        if (temp >= 16'd200)  temp = temp - 16'd200;   // 2*100
+        if (temp >= 16'd100)  temp = temp - 16'd100;   // 1*100
+        if (temp >= 16'd100)  temp = temp - 16'd100;   // extra one just in case
+        distance_mod = temp[6:0]; // now it has to be somewhere in the range of 0-99
     end
     
     always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin // don't need anything since we already handled rst_n
+        if (!rst_n) begin
+            position <= 7'd50; // start the dial at 50
+            zero_count <= 16'd0; // initialize our result and set it to 0
+            ready <= 1'b1; // we are ready and not busy (because we just started)
+            busy <= 1'b0;
         end else begin
-            case (state)
-                idle: begin
-                    ready <= 1'b1; // get ready for the next data
+            if (busy) begin // if we are busy, position = new_pos and check if it's 0
+                position <= new_pos;
+                if (new_pos == 7'd0) begin
+                    zero_count <= zero_count + 16'd1;
                 end
-                extract: begin
-                    direction_reg <= direction; // copy the inputs
-                    distance_reg <= distance;
-                    ready <= 1'b0;
-                end
-                calculate: begin
-                    if (direction_reg == 1'b1) begin
-                        temp_pos <= position + distance_reg; // right
+                busy <= 1'b0; // now we are not busy and ready again
+                ready <= 1'b1;
+                // if we are idle and get a valid move, calculate new_pos depending on if direction is L or R, set busy to 1 (we are busy now), and ready to 0 (because we are processing a move)
+            end else if (valid && ready) begin
+                if (direction) begin // we can say if (direction) because R was 1 and L was 0
+                    // if it is R: (position + distance_mod) % 100
+                    logic [7:0] temp_sum = position + distance_mod;
+                    if (temp_sum >= 8'd100) begin
+                        new_pos = temp_sum - 8'd100; // if we are out of range, subtract 100
                     end else begin
-                            temp_pos <= position - distance_reg; // left
+                        new_pos = temp_sum[6:0]; // if in range, set our new_pos to the temp_sum
                     end
-                end
-                edit: begin
-                // figure out our new locations in the case that we wrap around
-                    if (temp_pos >= 100) begin
-                        temp_pos <= temp_pos - 100; // wrapped from 99 to 0
-                    end else if (temp_pos < 0) begin
-                        temp_pos <= temp_pos + 100; // wrapped from 0 to 99
+                end else begin
+                    // if it is L: (position - distance_mod) % 100
+                    if (position >= distance_mod) begin
+                        new_pos = position - distance_mod; // no wrapping around so just do the calculation
                     end else begin
-                        position <= temp_pos[6:0]; // if in range, update our position
+                        new_pos = 7'd100 - (distance_mod - position); // for if wrapping around is needed
                     end
                 end
-                check: begin
-                    if (position == 7'd0) begin // check if our position is at 0
-                        zero_count <= zero_count + 16'd1; // if it is, add one to zero_count
-                    end
-                end
-            endcase
+                busy <= 1'b1; // set busy to 1 and ready to 0 at the end because we are executing a move and don't want to accept another one yet
+                ready <= 1'b0;
+            end
         end
-    end                         
+    end
 endmodule
