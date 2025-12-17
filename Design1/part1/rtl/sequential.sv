@@ -34,10 +34,13 @@ module sequential(
     logic [6:0] distance_mod; // distance % 100 to make it 0-99
     logic busy; // 1 is that a move is processing, 0 is we are idle
     
+    // Declare variables at module level
+    logic [15:0] temp; // for distance calculation
+    logic [7:0] temp_sum; // for position calculation
+    
     // do distance mod 100
-    // do a mod 100 manually; formula we are gonna use here: distance % 100 = distance - 100*(distance/100)
     always_comb begin
-        automatic logic [15:0] temp = distance; // copy the distance input in case something changes and also so we can do stuff with it
+        temp = distance; // No local declaration needed
         if (temp >= 16'd6400) temp = temp - 16'd6400;  // 64*100 ; binary decomposition
         if (temp >= 16'd3200) temp = temp - 16'd3200;  // 32*100  
         if (temp >= 16'd1600) temp = temp - 16'd1600;  // 16*100
@@ -63,11 +66,10 @@ module sequential(
                 end
                 busy <= 1'b0; // now we are not busy and ready again
                 ready <= 1'b1;
-                // if we are idle and get a valid move, calculate new_pos depending on if direction is L or R, set busy to 1 (we are busy now), and ready to 0 (because we are processing a move)
             end else if (valid && ready) begin
                 if (direction) begin // we can say if (direction) because R was 1 and L was 0
                     // if it is R: (position + distance_mod) % 100
-                    automatic logic [7:0] temp_sum = position + distance_mod;
+                    temp_sum = position + distance_mod;
                     if (temp_sum >= 8'd100) begin
                         new_pos = temp_sum - 8'd100; // if we are out of range, subtract 100
                     end else begin
