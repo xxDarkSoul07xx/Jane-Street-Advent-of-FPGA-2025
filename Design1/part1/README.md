@@ -40,9 +40,9 @@ Processing the input in smaller batches reduces memory overhead and improves sim
 ## Metrics
 
 This design uses the following resources:
-1. 39 LUTs
-2. 34 FFs
-3. 28 IOs
+1. 235 LUTs
+2. 32 FFs
+3. 44 IOs
 4. 1 BUFG
 
 ## How to Run It
