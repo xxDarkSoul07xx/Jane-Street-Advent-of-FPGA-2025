@@ -43,7 +43,7 @@ module sequential_tb;
     // make it a forever clock (period is 20 ps, freq = 50GHz)
     initial begin
         clk = 0;
-        forever #1 clk = ~clk;
+        forever #0.01 clk = ~clk;
     end
     
     // gonna do it in batches of 500 so that we aren't overloading the memory
@@ -83,7 +83,7 @@ module sequential_tb;
             
             // go through the current batch
             for (integer i = 0; i < batch_size; i = i + 1) begin
-                string line = lines[i];
+                automatic string line = lines[i];
                 
                 // get rid of the newline characters so that the parsing works
                 if (line.len() > 0 && line.getc(line.len()-1) == "\n") begin
@@ -123,7 +123,7 @@ module sequential_tb;
     end
     
     initial begin
-        #1000000000000000000000000000000000000; // timeout if there's an infinite loop or some random error
+        #1000000; // timeout if there's an infinite loop or some random error
         $display("timed out");
         $finish;
     end
