@@ -106,6 +106,7 @@ module sequential_tb;
                     valid = 1'b1;
                     @(posedge clk);
                     valid = 1'b0;
+                    wait(ready == 1'b1);
                     line_num = line_num + 1; // + 1 lines have been processed now
                 end
             end
