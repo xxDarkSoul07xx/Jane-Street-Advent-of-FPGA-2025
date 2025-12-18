@@ -27,7 +27,16 @@ By doing this, I was also able to avoid using the mod operator, which is a bit e
 
 After implementing my new design in Vivado, I decided to then make the testbench. Since I had the input in my design as a file called `input.txt`, I downloaded the input from Advent of Code as a .txt file. Then, in my testbench, I parsed through it to extract the directions and distance to move the dial. However, I quickly realized that string handling in SystemVerilog is not efficient at all. I ended up needing to have a very fast clock speed to make it through all the movements in the file. The reason that it's not very efficient is because parsing strings require using system tasks like 
 ``` $fgets ```
-These tasks operate sequentially and are relatively slow in simulation, so processing a large input file with thousands of lines made the testbench runtime noticeably long and caused it to automatically timeout. However, I was able to get around this by making my clock at 50GHz. I would like to note that this limitation is specific to the testbench and simulation environment in Vivado. On actual hardware, the design itself would not operate on strings and files. The testbench simply serves as a bridge to convert the text input into signals that the RTL can consume. There were approximately 4400 instructions, so on real hardware, if the clock was at 50MHz (20 ns per cycle), and each instruction took ~5 cycles, it would take 22000 cycles to get through everything. 22000 * 20 ns = 440 microseconds, which is under a millisecond.
+These tasks operate sequentially and are relatively slow in simulation, so processing a large input file with thousands of lines made the testbench runtime noticeably long and caused it to automatically timeout. However, I was able to get around this by making my clock at 50GHz. I would like to note that this limitation is specific to the testbench and simulation environment in Vivado. On actual hardware, the design itself would not operate on strings and files. The testbench simply serves as a bridge to convert the text input into signals that the RTL can consume. Here is the timing calculation on actual hardware:
+
+Each instruction takes 3 clock cycles:
+1. Cycle 1: Assert valid to start the operation
+2. Cycle 2: Design computes and returns ready
+3. Cycle 3: Next instruction can begin after the required @(posedge clk) following the wait(ready)
+
+With 4424 instructions at 50MHz (20ns/cycle):
+4424 × 3 × 20ns = 265.44 microseconds
+
 
 ## How it Works
 
