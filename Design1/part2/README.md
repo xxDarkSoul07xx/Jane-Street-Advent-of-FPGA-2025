@@ -37,10 +37,10 @@ With 4424 instructions at 50MHz (20ns/cycle):
 ## Metrics
 This design uses the following resources:
 
-577 LUTs (more than doubled since part 1 due to the formulas I used, which require more combinational logic)
-25 FFs (less state storage)
-44 IOs
-1 BUFG
+1. 577 LUTs (more than doubled since part 1 due to the formulas I used, which require more combinational logic)
+2. 25 FFs (less state storage)
+3. 44 IOs
+4. 1 BUFG
 
 ## How to Run It
 To run the design, you can use any SystemVerilog simulator that supports file I/O. I would recommend Vivado since this design was built in Vivado.
