@@ -29,7 +29,7 @@ module sequential2_tb;
     logic [15:0] zero_count;
     logic [6:0] position;
     
-    // instantiate the dut and connect the local signals in the testbench tot he dut's ports
+    // instantiate the dut and connect the local signals in the testbench to the dut's ports
     sequential2 dut (
         .clk(clk),
         .rst_n(rst_n),
