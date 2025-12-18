@@ -60,4 +60,4 @@ To run the design, you can use any SystemVerilog simulator that supports file I/
 
 1. Download the `sequential.sv`, `sequential_tb.sv`, and `input.txt`
 2. Open Vivado, make a new project with any board/part (won't matter for simulation), and make `sequential.sv` a design source. Make `sequential_tb.sv` and `input.txt` simulation sources.
-3. Run simulation. You can look at the waveform and the log.
+3. Run simulation. You can look at the waveform and the log. The result will be displayed as `zero_count`.
