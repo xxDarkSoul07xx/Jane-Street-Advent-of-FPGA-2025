@@ -1,4 +1,4 @@
-Welcome to my solution for part 2 of this problem. You can see my RTL design in SystemVerilog in the [rtl](./rtl) folder and its testbench in the [tb](./tb) folder.
+Welcome to my solution for part 2 of this problem. You can see my RTL design in SystemVerilog in the [rtl](./rtl) folder and its testbench (along with `input.txt`) in the [tb](./tb) folder.
 
 ## The Journey to the Working Solution
 After getting part 1 correct on December 16, I decided to start part 2 on December 17. 
