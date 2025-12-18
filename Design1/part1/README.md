@@ -1,4 +1,4 @@
-Welcome to my solution for part 1 of this problem. You can see my initial thoughts and drawings in the [Diagrams](./diagrams) folder. You can see my RTL design in SystemVerilog in the [rtl](./rtl) folder and its testbench in the [tb](./tb) folder.
+Welcome to my solution for part 1 of this problem. You can see my initial thoughts and drawings in the [Diagrams](./diagrams) folder. You can see my RTL design in SystemVerilog in the [rtl](./rtl) folder and its testbench (along with `input.txt`) in the [tb](./tb) folder.
 
 ## The Journey to the Working Solution
 
@@ -59,5 +59,5 @@ This design uses the following resources:
 To run the design, you can use any SystemVerilog simulator that supports file I/O. I would recommend Vivado since this design was built in Vivado.
 
 1. Download the `sequential.sv`, `sequential_tb.sv`, and `input.txt`
-2. Open Vivado, make a new project with any board/part (won't matter for simulation), and make `sequential.sv` a design source. Make `sequential_tb.sv` and `input.txt` simulations sources.
+2. Open Vivado, make a new project with any board/part (won't matter for simulation), and make `sequential.sv` a design source. Make `sequential_tb.sv` and `input.txt` simulation sources.
 3. Run simulation. You can look at the waveform and the log.
