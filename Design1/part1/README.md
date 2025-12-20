@@ -37,6 +37,75 @@ Each instruction takes 3 clock cycles:
 With 4424 instructions at 50MHz (20ns/cycle):
 4424 × 3 × 20ns = 265.44 microseconds
 
+## Scalability and Considerations
+
+### Current Design
+
+1. Throughput: 1 instruction/rotation per 3 cycles
+2. Maximum distance: 16 bits (0-65,535)
+3. Position range: 0-99 (7 bits needed)
+4. Zero counter: 16 bits (max 65,535 zero crossings)
+5. Memory: instructions are streamed live, no external memory
+
+### If Scaled to 10x Inputs (~44,240 Rotations)
+
+1. Throughput: The current design finishes at about 265 microseconds at 50 MHz. For 44,240 rotations, 265 microseconds * 10 = 2.65 ms, which is still pretty fast in the real world.
+2. Zero counter: 16 bits is still enough. Assuming the rate of crossovers was still the same, there would be answer * 10 (will be updated after the contest ends, because I don't want to leak the answer), which is representable with 14 bits, meaning that 16 is more than enough.
+3. Resources Scaling: The LUT count would scale linearly with control logic, so given that the current design takes 235 LUTs, multiplying 235 * 1.1 = about 260 LUTs, which isn't a big increase.
+
+### If Scaled to 100x Inputs (~4.4 Million Rotations)
+1. Throughput: We last calculated that at 10x inputs, it would take 2.65 ms. If we multiplied that by 10 again to get 100x inputs (2.65 ms * 100), we would get 265 ms, which is still an acceptable time.
+2. Zero counter: 16 bits would definitely not be enough. It would have to be 32 bits (again, assuming that the rate of crossovers was the same).
+3. Memory issue here: Processing so many rotations/instructions isn't realistic here, so we would probably end up having to use a BRAM buffer to store thousands of rotations.
+4. Resource Estimate: The counters would widen a lot, so LUT count would go up, and like I said, we would need a BRAM due to the sheer number of instructions.
+
+### The Bottleneck Here
+
+The critical path here would be the binary decomposition, since it would be the longest combinational path. At 1000x inputs, the clock frequency (sped up by quite a bit for simulation purposes) would have to be reduced, but that would mean that pipelining would be needed.
+
+The file I/O is simulation-only right now. In a real system, it would need UART or PCIe.
+
+### Possible Improvements in the Case of Extreme Input Growth
+
+If I had more knowledge/time to learn (I'm doing this over winter break as a first year student), here are the things I'd try to do:
+
+1. Pipeline the state machine: I'd try to make it so that we could get 1 rotation/instruction per cycle. I'd have to add registers after the binary decomposition. Unfortunately, like I said, I'm a first year, and to be honest, I don't have the knowledge or experience to implement a pipelined version correctly. I understand the concept, but implementation is another challenge (theory vs real world experience).
+2. Try to use a prefix sum: While researching ways to try and optimize performance, I came across the idea of a prefix sum. I think that in order to implement it here, I would have to somehow compute all the position updates in parallel and then apply this to the dial. It would allow the operation to be done in O(log N) cycles.
+3. Memory: I might try to store the `distance % 100` in a lookup table (100x7-bit ROM). This would trade logic for memory, but FPGAs these days usually have enough BRAM sources. With the 100x7 bit ROM, it would use only 700 bits, so it would be a very practical tradeoff.
+4. Parametrize: I would make the dial range parametrizable (you could just change the width of the `position` register, but I'm not going to change it because the current setup works for the problem.
+
+## The Resource Usage Breakdown
+
+According to the synthesis report, the design uses 235 LUTs, 32 FFs, 44 IOs, and one BUFG. If I had to approximate where the logic goes, I would probably put 45% to the binary decomposition, 25% to update the position and the wrap-around logic, 15% to the state machine and busy/ready handshake, and the last 15% to the counters and registers. The key insight about this design is that it's pretty logic heavy and not memory heavy. The main bottleneck is the decomposition. Like I said before, in a larger design, it would probably have to be pipelined or use a small ROM lookup.
+
+## Real World Considerations
+
+In the current interface, there is a `valid`/`ready` handshake. In the real world, the module wouldn't read a file called `input.txt` - it's just for simulation. It would probably need an actual interface like UART + parser (ASCII instructions come in, and use a separate parser FSM feeds the module) or AXI-Lite slave (CPU would write the parsed [direction, distance] pairs. Obviously this means, that the module is only realistic for verification in a simulation environment (which I believe should be fine since the blog post said that we just need to have realistic I/O and aren't required to synthesize onto an actual FPGA). Of course, the opportunity to synthesize onto an actual FPGA would be great.
+
+## Tradeoffs for Performance vs Power
+
+1. Currently, at 50 MHz: 265 microseconds total execution
+2. At 1 MHz (if power needed to be conserved): 13.25 ms total, which is fine for human interaction and saves a ton of power
+3. At 100 MHz (if performance was the priority): 133 microseconds total (pipelining would probably be needed here)
+
+The clock speed doesn't affect whether the module outputs the right answer. It only affects the throughput. Obviously running at a slower clock rate would save power, but we wanted performance, it could be pipelined and use a faster clock rate.
+
+## Testing and Verification
+
+The current testbench clearly has limitations. It's a very basic testbench. There's no type of randomization or anything like that. Here are a couple things I'd recommend if the scenario were that this woul dbe used in actual production:
+
+1. Randomization: use random positions, distances, and directions. Run this for like 100k cycles, and then do some analysis.
+2. Formal verification: use some formal methodologies
+
+## Alternative Design Ideas
+
+The first alternative design I can think of is to use the BRAM. It would trade logic for memory. The second alternative design I can think of would maybe be trying to combine hardware and software. With Advent of Code and Advent of FPGA having the same questions, I don't see why for example, software could parse the `input.txt` (like I said SystemVerilog is not good for parsing strings), and then have the hardware to do the position and crossover calculations.
+
+## Things I Learned and Limitations
+
+Like I said somewhere in this README, I'm a first year student and still learning advanced concepts. While I have been able to apply the conceptual knowledge to improve this design, I don't have the coursework or experience to implement them confidently (or even correctly). This design itself took much longer than I would have liked, but it was pretty fun to do. This submission represents my current abilities applied creatively (over many, many hours) to solve the problem, and I'm really excited to learn more.
+
+Some areas that I hope to learn more about are pipelining (obviously), parallel hardware, verification methods like UVM, physical implementation (place and route), and power optimization, as well as clock domain crossing (like pipelining, I understand what it is - just not how to correctly implement it).
 
 ## How it Works
 
