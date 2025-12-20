@@ -12,7 +12,7 @@ For moving left, I realized that I had to think differently, and through trial a
 if y < p: no zeros
 otherwise: 1 + floor((y - x) / 100)
 
-After implementing this formula, I got 5057, but it was wrong. When I was debugging, I was able to uncover a couple of things. When starting at position 0 and moving right, I was counting the starting position as a 0. This caused the `zero_count` to be off. After rectifying this, I was able to get the correct answer.
+After implementing this formula, I got 5057, but it was wrong. When I was debugging, I was able to uncover that my clock frequency was too slow. I was messing around with clock frequencies, I forgot to reset it back to the 50 GHz. After doing so, I was able to get the correct answer.
 
 ## How it Works
 The design maintains the dial position in the range 0–99 and updates it according to a direction (L or R) and a distance. The distance is reduced modulo 100 using a binary-decomposition method to avoid expensive division/modulo logic in hardware. Unlike in part 1, this design counts when the dial lands on 0 during and after a rotation.
