@@ -36,7 +36,8 @@ module sequential_tb;
         .direction(direction),
         .distance(distance),
         .ready(ready),
-        .zero_count(zero_count)
+        .zero_count(zero_count),
+        .position(position)
     );
     
     // make the clock
