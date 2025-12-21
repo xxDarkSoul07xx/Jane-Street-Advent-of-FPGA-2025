@@ -12,7 +12,7 @@ For moving left, I realized that I had to think differently, and through trial a
 if y < p: no zeros
 otherwise: 1 + floor((y - x) / 100)
 
-After implementing this formula, I got 5057, but it was wrong. When I was debugging, I was able to uncover that my clock frequency was too slow. I was messing around with clock frequencies. I forgot to reset it back to the 50 GHz. After doing so, I was able to get the correct answer.
+After implementing this formula, I got the wrong answer. When I was debugging, I was able to uncover that my clock frequency was too slow. I was messing around with clock frequencies. I forgot to reset it back to the 50 GHz. I also found out that whenever a rotation started at 0, I was accidentally counting that as a crossover. After fixing these, I was able to get the correct answer.
 
 ## Scalability and Considerations
 
