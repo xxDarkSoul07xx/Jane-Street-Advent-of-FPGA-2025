@@ -27,6 +27,7 @@ module sequential_tb;
     logic [15:0] distance;
     logic ready;
     logic [15:0] zero_count;
+    logic [6:0] position;
     
     // instantiate the dut and connect the local signals in the testbench to the dut's ports
     sequential dut (
