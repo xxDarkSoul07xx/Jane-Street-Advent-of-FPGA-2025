@@ -71,7 +71,7 @@ If I had more knowledge/time to learn (I'm doing this over winter break as a fir
 
 1. Pipeline the state machine: I'd try to make it so that we could get 1 rotation/instruction per cycle. I'd have to add registers after the binary decomposition. Unfortunately, like I said, I'm a first year, and to be honest, I don't have the knowledge or experience to implement a pipelined version correctly. I understand the concept, but implementation is another challenge (theory vs real world experience).
 2. Try to use a prefix sum: While researching ways to try and optimize performance, I came across the idea of a prefix sum. I think that in order to implement it here, I would have to somehow compute all the position updates in parallel and then apply this to the dial. It would allow the operation to be done in O(log N) cycles.
-3. Memory: I might try to store the `distance % 100` in a lookup table (100x7-bit ROM). This would trade logic for memory, but FPGAs these days usually have enough BRAM sources. With the 100x7 bit ROM, it would use only 700 bits, so it would be a very practical tradeoff.
+3. Memory: I might try to store all possible `(position + distance_mod) % 100` results in a lookup table (100×100×7-bit ROM = 70,000 bits). This would trade logic for memory, but FPGAs these days usually have enough BRAM resources. With the 100×100×7-bit ROM, it would use only 70,000 bits, so it would be a practical tradeoff.
 4. Parametrize: I would make the dial range parametrizable (you could just change the width of the `position` register, but I'm not going to change it because the current setup works for the problem.
 
 ## The Resource Usage Breakdown
