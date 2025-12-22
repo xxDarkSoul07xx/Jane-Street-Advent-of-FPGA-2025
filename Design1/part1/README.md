@@ -76,7 +76,7 @@ If I had more knowledge/time to learn (I'm doing this over winter break as a fir
 
 ## The Resource Usage Breakdown
 
-According to the synthesis report, the design uses 235 LUTs, 32 FFs, 44 IOs, and one BUFG. If I had to approximate where the logic goes, I would probably put 45% to the binary decomposition, 25% to update the position and the wrap-around logic, 15% to the state machine and busy/ready handshake, and the last 15% to the counters and registers. The key insight about this design is that it's pretty logic heavy and not memory heavy. The main bottleneck is the decomposition. Like I said before, in a larger design, it would probably have to be pipelined or use a small ROM lookup.
+According to the synthesis report, the design uses 195 LUTs, 32 FFs, 44 IOs, and one BUFG. If I had to approximate where the logic goes, I would probably put 45% to the binary decomposition, 25% to update the position and the wrap-around logic, 15% to the state machine and busy/ready handshake, and the last 15% to the counters and registers. The key insight about this design is that it's pretty logic heavy and not memory heavy. The main bottleneck is the decomposition. Like I said before, in a larger design, it would probably have to be pipelined or use a small ROM lookup.
 
 ## Real World Considerations
 
@@ -118,7 +118,7 @@ Processing the input in smaller batches reduces memory overhead and improves sim
 ## Metrics
 
 This design uses the following resources:
-1. 235 LUTs
+1. 195 LUTs
 2. 32 FFs
 3. 44 IOs
 4. 1 BUFG
