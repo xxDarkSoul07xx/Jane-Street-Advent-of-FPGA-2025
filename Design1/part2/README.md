@@ -31,7 +31,7 @@ After implementing this formula, I got the wrong answer. When I was debugging, I
 3. Resources Scaling: The LUT count would scale linearly with control logic, so given that the current design takes 577 LUTs, multiplying 577 * 1.1 = about 635 LUTs, which isn't a big increase.
 
 ### If Scaled to 100x Inputs (~4.4 Million Rotations)
-1. Throughput: We last calculated that at 10x inputs, it would take 2.65 ms. If we multiplied that by 10 again to get 100x inputs (2.65 ms * 100), we would get 265 ms, which is still an acceptable time.
+1. Throughput: We last calculated that at 10x inputs, it would take 2.65 ms. If we multiplied that by 10 again to get 100x inputs (2.65 ms * 10), we would get 26.5 ms, which is still an acceptable time.
 2. Zero counter: 16 bits would definitely not be enough. It would have to be 32 bits (again, assuming that the rate of crossovers was the same).
 3. Memory issue here: Processing so many rotations/instructions isn't realistic here, so we would probably end up having to use a BRAM buffer to store thousands of rotations.
 4. Resource Estimate: The counters would widen a lot, so LUT count would go up, and like I said, we would need a BRAM due to the sheer number of instructions.
