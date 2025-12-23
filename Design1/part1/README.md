@@ -18,7 +18,6 @@ After finals week, I decided to code up my solution on December 15. I then decid
         if (temp >= 16'd400)  temp = temp - 16'd400;   // 4*100
         if (temp >= 16'd200)  temp = temp - 16'd200;   // 2*100
         if (temp >= 16'd100)  temp = temp - 16'd100;   // 1*100
-        if (temp >= 16'd100)  temp = temp - 16'd100;   // extra one just in case
         distance_mod = temp[6:0]; // now it has to be somewhere in the range of 0-99
     end
 ```
