@@ -85,7 +85,7 @@ The first alternative design I can think of is to use the BRAM. It would trade l
 
 ## Things I Learned and Limitations
 
-Like I said somewhere in this README, I'm a first year student and still learning advanced concepts. While I have been able to apply the conceptual knowledge to improve this design, I don't have the coursework or experience to implement them confidently (or even correctly). This design itself took much longer than I would have liked, but it was pretty fun to do. This submission represents my current abilities applied creatively (over many, many hours) to solve the problem, and I'm really excited to learn more.
+Like I said somewhere in this README, I'm a first year student and still learning advanced concepts. While I have been able to apply enough conceptual knowledge to make this design and solve the problem, I don't have the coursework or experience to implement more advanced topics confidently (or even correctly). This design itself took much longer than I would have liked, but it was pretty fun to do. This submission represents my current abilities applied creatively (over many, many hours) to solve the problem, and I'm really excited to learn more.
 
 Making this solution for part 2 has taught me a lot more about the cost of basic operations that to be honest, I took for granted when coding in Python or C++. Unlike in software, it seems I'll have to be very mindful in very complex designs so that I don't use up a boatload of resources. Also, it's given me a little bit of experience with modeling problems as math equations, which I found pretty cool.
 
