@@ -28,7 +28,7 @@ After implementing this formula, I got the wrong answer. When I was debugging, I
 
 1. Throughput: The current design finishes at about 265 microseconds at 50 MHz. For 44,240 rotations, 265 microseconds * 10 = 2.65 ms, which is still pretty fast in the real world.
 2. Zero counter: 16 bits is still enough. Assuming the rate of crossovers was still the same, there would be answer * 10 (will be updated after the contest ends, because I don't want to leak the answer) so 16 is more than enough.
-3. Resources Scaling: The LUT count would scale linearly with control logic, so given that the current design takes 577 LUTs, multiplying 577 * 1.1 = about 635 LUTs, which isn't a big increase.
+3. Resources Scaling: Runtime would increase linearly with more instructions, but the logic area would remain nearly constant. Whether we are processing 10 rotations or 10,000 rotations, the same binary decomposition logic, position update logic, and control FSM would be reused each cycle.
 
 ### If Scaled to 100x Inputs (~4.4 Million Rotations)
 1. Throughput: We last calculated that at 10x inputs, it would take 2.65 ms. If we multiplied that by 10 again to get 100x inputs (2.65 ms * 10), we would get 26.5 ms, which is still an acceptable time.
