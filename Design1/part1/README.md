@@ -49,7 +49,7 @@ With 4424 instructions at 50MHz (20ns/cycle):
 ### If Scaled to 10x Inputs (~44,240 Rotations)
 
 1. Throughput: The current design finishes at about 265 microseconds at 50 MHz. For 44,240 rotations, 265 microseconds * 10 = 2.65 ms, which is still pretty fast in the real world.
-2. Zero counter: 16 bits is still enough. Assuming the rate of crossovers was still the same, there would be answer * 10 (will be updated after the contest ends, because I don't want to leak the answer), which is representable with 14 bits, meaning that 16 is more than enough.
+2. Zero counter: 16 bits is still enough. Assuming the rate of crossovers was still the same, there would be answer * 10, which is representable with 14 bits, meaning that 16 is more than enough.
 3. Resources Scaling: Runtime would increase linearly with more instructions, but the logic area would remain nearly constant. Whether we are processing 10 rotations or 10,000 rotations, the same binary decomposition logic, position update logic, and control FSM would be reused each cycle.
 
 ### If Scaled to 100x Inputs (~4.4 Million Rotations)
