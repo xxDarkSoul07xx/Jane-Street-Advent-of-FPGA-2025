@@ -54,7 +54,7 @@ If I had more knowledge/time to learn (I'm doing this over winter break as a fir
 
 ## The Resource Usage Breakdown
 
-According to synthesis, the design uses 577 LUTs, 25 FFs, 44 IOs, and one BUFG. If I had to approximate where the logic goes, I would probably put 40% to the division logic, 30% to the binary decomposition, 15% for the position calculation and wrap-around, 10% for the state machine and handshake, and 5% for the counters and registers. The key insight about this design is that the division absolutely dominates the logic. This is pretty clear because the binary decomposition from part 1 is now a smaller portion of the total (and also because of how many more LUTs are used).
+According to synthesis, the design uses 534 LUTs, 25 FFs, 44 IOs, and one BUFG. If I had to approximate where the logic goes, I would probably put 40% to the division logic, 30% to the binary decomposition, 15% for the position calculation and wrap-around, 10% for the state machine and handshake, and 5% for the counters and registers. The key insight about this design is that the division absolutely dominates the logic. This is pretty clear because the binary decomposition from part 1 is now a smaller portion of the total (and also because of how many more LUTs are used).
 
 ## Real World Considerations
 
@@ -114,7 +114,7 @@ With 4424 instructions at 50MHz (20ns/cycle):
 ## Metrics
 This design uses the following resources:
 
-1. 577 LUTs (more than doubled since part 1 due to the formulas I used, which require more combinational logic)
+1. 534 LUTs (more than doubled since part 1 due to the formulas I used, which require more combinational logic)
 2. 25 FFs (less state storage)
 3. 44 IOs
 4. 1 BUFG
