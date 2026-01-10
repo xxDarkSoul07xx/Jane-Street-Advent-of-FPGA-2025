@@ -14,7 +14,7 @@ Each part contains:
 ## Quick Stats
 - Part 1: 195 LUTs, 32 FFs
 - Part 2: 534 LUTs, 25 FFs
-- Both designs: 3 cycles/instruction throughput
+- Both designs: 3 cycles/instruction latency
 
 The reason for the naming like Design1 and sequential is because I initially wanted to do a sequential design and then a pipelined design. After the sequential one was working, I tried to pipeline and quickly realized I don't have the experience for it, but I hope to gain enough in the future to do so.
 
